@@ -1,5 +1,4 @@
 class BotHost:
-    BOT_TOKEN = '6541310747:AAHd6zwcfdOY5izuA5j8e_AlwqXCKx5zezY'
     BOT_HOST_SUCCESS_NOTIFICATION = 'Bot was successfully hosted and now online.'
     BOT_HOST_FAILURE_NOTIFICATION = 'Failed to host bot.'
 
