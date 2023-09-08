@@ -49,4 +49,12 @@ class RemindRequest:
     TEXT_SELECT = 'Write text of reminder.'
 
 
-WRONG_SYNTAX_ERROR = 'Wrong syntax.'
+class Reminders:
+    REMINDERS_FOLDER = 'Reminders'
+    WAITING_TIME_STATUS = 'Waiting time'
+    NOTIFIED_STATUS = 'Notified'
+
+    FAILED_TO_SET_STATUS_EXCEPTION = 'Failed to set status of reminder'
+
+
+WRONG_SYNTAX_EXCEPTION = 'Wrong syntax.'

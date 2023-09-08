@@ -202,7 +202,7 @@ def supplement_request(message: telebot.types.Message, editing_request, bot_resp
 
                 else:
                     # Wrong syntax, return error
-                    bot_response.add_message(constants.WRONG_SYNTAX_ERROR)
+                    bot_response.add_message(constants.WRONG_SYNTAX_EXCEPTION)
                     bot_response.reply_keyboard = ReplyKeyboardCreator.get_day_keyboard()
                     return bot_response
 
@@ -214,7 +214,7 @@ def supplement_request(message: telebot.types.Message, editing_request, bot_resp
                 minutes = int(minutes)
             except Exception:
                 # Wrong syntax, return error
-                bot_response.add_message(constants.WRONG_SYNTAX_ERROR)
+                bot_response.add_message(constants.WRONG_SYNTAX_EXCEPTION)
                 bot_response.reply_keyboard = ReplyKeyboardCreator.get_day_keyboard()
                 return bot_response
 

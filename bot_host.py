@@ -5,7 +5,7 @@ import constants
 
 def get_bot() -> telebot.TeleBot:
     try:
-        bot = telebot.TeleBot(open('bot_token.txt').readline())
+        bot = telebot.TeleBot(open('Fast Replies/bot_token.txt').readline())
         print(constants.BotHost.BOT_HOST_SUCCESS_NOTIFICATION)
         return bot
     except Exception:
