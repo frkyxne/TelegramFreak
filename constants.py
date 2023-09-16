@@ -58,3 +58,4 @@ class Reminders:
 
 
 WRONG_SYNTAX_EXCEPTION = 'Wrong syntax.'
+TOKEN_PATH = 'F:/Code/GitHubRepositories/TelegramFreak/Fast Replies/bot_token.txt'

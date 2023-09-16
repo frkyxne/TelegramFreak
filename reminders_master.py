@@ -94,7 +94,3 @@ def set_reminder_status(reminder: Reminder, new_status: str) -> None:
     new_reminder_strings_file = open(f'{constants.Reminders.REMINDERS_FOLDER}/{reminder.reminder_date}.txt', 'w+')
     new_reminder_strings_file.writelines(new_reminder_strings)
     new_reminder_strings_file.close()
-
-
-set_reminder_status(get_all_reminders(datetime.date.today())[1], new_status=constants.Reminders.NOTIFIED_STATUS)
-

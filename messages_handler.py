@@ -2,6 +2,7 @@ import datetime
 import telebot
 import io
 import constants
+import reminders_master
 
 
 class RemindRequest:
@@ -226,6 +227,9 @@ def supplement_request(message: telebot.types.Message, editing_request, bot_resp
         else:
             editing_request.reminder_text = message.text
             EditingRequests.remove(editing_request)
+            reminder = reminders_master.Reminder(user_id=editing_request.user_id, date=editing_request.reminder_date,
+                                                 time=editing_request.reminder_time, text=editing_request.reminder_text)
+            reminders_master.write_down_reminder(reminder)
             bot_response.add_message(f'Alright, I will reminder you {editing_request.reminder_date} in '
                                      f'{str(editing_request.reminder_time)[0:-3]} oclock about '
                                      f'"{editing_request.reminder_text}"')
