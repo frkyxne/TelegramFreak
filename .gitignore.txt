@@ -1,1 +1,2 @@
 Fast Replies/bot_token.txt
+Logs/
