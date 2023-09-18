@@ -1,23 +1,25 @@
 class BotHost:
-    BOT_HOST_SUCCESS_NOTIFICATION = 'Bot was successfully hosted and now online.'
+    BOT_HOST_SUCCESS_NOTIFICATION = f'Bot was successfully hosted and now online.\n{"="*43}'
     BOT_HOST_FAILURE_NOTIFICATION = 'Failed to host bot.'
 
 
 class Commands:
     CREATING_REQUEST = 'Creating new request.'
     DELETING_EDITING_REQUEST = 'Closing not created request.'
-    NO_EDITING_REQUEST_ERROR = 'There is no editing requests by your id.'
+    NO_EDITING_REQUEST_EXCEPTION = 'There is no editing requests by your id.'
 
     # Fast reply commands
     START_COMMAND = '/start'
     HELP_COMMAND = '/help'
     MY_BIO_COMMAND = '/my_bio'
+    MUSIC_COMMAND = '/music'
 
     FAST_REPLY_COMMANDS = \
         [
             START_COMMAND,
             HELP_COMMAND,
-            MY_BIO_COMMAND
+            MY_BIO_COMMAND,
+            MUSIC_COMMAND
         ]
 
     # System commands
@@ -25,12 +27,10 @@ class Commands:
 
     # Request commands
     REMIND_COMMAND = '/remind'
-    GREET_COMMAND = '/greet'
 
     REQUEST_COMMANDS = \
         [
             REMIND_COMMAND,
-            GREET_COMMAND
         ]
 
 

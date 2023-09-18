@@ -1,14 +1,23 @@
 import datetime
-
+from enum import Enum
 import constants
+import webbrowser
 
 
 class Reminder:
-    def __init__(self, user_id: int, date: datetime.date, time: datetime.time, text: str):
+    class Status(Enum):
+        SETTING_DATE = 0
+        SETTING_TIME = 1
+        SETTING_TEXT = 2
+        WAITING_TIME = 3
+        NOTIFIED = 4
+
+    def __init__(self, user_id: int, date: datetime.date = None, time: datetime.time = None, text: str = None):
         self.__user_id = user_id
         self.__reminder_date = date
         self.__reminder_time = time
         self.__reminder_text = text
+        self.__status = self.Status.SETTING_DATE
 
     @property
     def user_id(self):
@@ -18,13 +27,32 @@ class Reminder:
     def reminder_date(self):
         return self.__reminder_date
 
+    @reminder_date.setter
+    def reminder_date(self, date: datetime.date):
+        self.__reminder_date = date
+        self.__status = self.Status.SETTING_TIME
+
     @property
     def reminder_time(self):
         return self.__reminder_time
 
+    @reminder_time.setter
+    def reminder_time(self, time: datetime.time):
+        self.__reminder_time = time
+        self.__status = self.Status.SETTING_TEXT
+
     @property
     def reminder_text(self):
         return self.__reminder_text
+
+    @reminder_text.setter
+    def reminder_text(self, text: str):
+        self.__reminder_text = text
+        self.__status = self.Status.WAITING_TIME
+
+    @property
+    def status(self):
+        return self.__status
 
     def to_string(self) -> str:
         return f'{self.__user_id}/{self.__reminder_date}/{self.__reminder_time}/{self.__reminder_text}'
