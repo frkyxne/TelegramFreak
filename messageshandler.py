@@ -1,5 +1,3 @@
-import webbrowser
-
 import telebot
 import constants
 import io
@@ -80,8 +78,7 @@ class MessagesHandler:
                 reply = reply.replace('{', '').replace('}', '')
                 reply = reply.replace("'", '').replace(', ', '\n')
             elif fast_rely_command == constants.Commands.MUSIC_COMMAND:
-                reply = 'Opening web browser...enjoy)'
-                webbrowser.open('https://www.youtube.com/watch?v=rUxyKA_-grg')
+                reply = 'https://www.youtube.com/watch?v=rUxyKA_-grg'
             else:
                 # Quick reply command is not supported
                 reply = f'Quick reply for "{message.text}" command is not supported'

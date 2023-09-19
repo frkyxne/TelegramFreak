@@ -1,6 +1,7 @@
 class BotHost:
-    BOT_HOST_SUCCESS_NOTIFICATION = f'Bot was successfully hosted and now online.\n{"="*43}'
+    BOT_HOST_SUCCESS_NOTIFICATION = f'Bot was successfully hosted and now online.\n{"=" * 52}'
     BOT_HOST_FAILURE_NOTIFICATION = 'Failed to host bot.'
+    BOT_KILLING_NOTIFICATION = f'\n{"=" * 21}\nKilling bot.'
 
 
 class Commands:
@@ -50,7 +51,7 @@ class RemindRequest:
 
 
 class Reminders:
-    REMINDERS_FOLDER = 'Reminders'
+    REMINDERS_FOLDER = 'F:/Code/GitHubRepositories/TelegramFreak/Reminders'
     WAITING_TIME_STATUS = 'Waiting time'
     NOTIFIED_STATUS = 'Notified'
 
@@ -59,3 +60,5 @@ class Reminders:
 
 WRONG_SYNTAX_EXCEPTION = 'Wrong syntax.'
 TOKEN_PATH = 'F:/Code/GitHubRepositories/TelegramFreak/Fast Replies/bot_token.txt'
+KILL_CODE_PATH = 'F:/Code/GitHubRepositories/TelegramFreak/Fast Replies/kill_code.txt'
+LOGS_FOLDER = 'F:/Code/GitHubRepositories/TelegramFreak/Logs'
