@@ -1,7 +1,6 @@
 import datetime
 from enum import Enum
 import constants
-import webbrowser
 
 
 class Reminder:
@@ -12,12 +11,17 @@ class Reminder:
         WAITING_TIME = 3
         NOTIFIED = 4
 
-    def __init__(self, user_id: int, date: datetime.date = None, time: datetime.time = None, text: str = None):
+    def __init__(self, user_id: int, date: datetime.date = None, time: datetime.time = None, text: str = None,
+                 status: Status = None):
         self.__user_id = user_id
         self.__reminder_date = date
         self.__reminder_time = time
         self.__reminder_text = text
-        self.__status = self.Status.SETTING_DATE
+
+        if status is None:
+            self.__status = self.Status.SETTING_DATE
+        else:
+            self.__status = status
 
     @property
     def user_id(self):
@@ -55,7 +59,8 @@ class Reminder:
         return self.__status
 
     def to_string(self) -> str:
-        return f'{self.__user_id}/{self.__reminder_date}/{self.__reminder_time}/{self.__reminder_text}'
+        return (f'{self.__user_id}/{self.__reminder_date}/{str(self.__reminder_time)[0:-3]}/{self.__reminder_text}/'
+                f'{self.__status}')
 
     @staticmethod
     def from_string(reminder_string: str):
@@ -70,20 +75,29 @@ class Reminder:
             time_string = split[2].split(':')
             reminder_time = datetime.time(hour=int(time_string[0]), minute=int(time_string[1]))
 
-            return Reminder(user_id=int(split[0]), date=reminder_date, time=reminder_time, text=split[3])
+            # Get status from split
+            written_status = split[-1]
+            real_status = None
+
+            for status in Reminder.Status:
+                if str(status) == written_status:
+                    real_status = status
+
+            return Reminder(user_id=int(split[0]), date=reminder_date, time=reminder_time, text=split[3],
+                            status=real_status)
         except Exception:
             return None
 
 
 def write_down_reminder(new_reminder: Reminder) -> None:
     reminders_file = open(f'{constants.Reminders.REMINDERS_FOLDER}/{new_reminder.reminder_date}.txt', 'a')
-    reminders_file.write(f'\n{new_reminder.to_string()}/{constants.Reminders.WAITING_TIME_STATUS}')
+    reminders_file.write(new_reminder.to_string())
     reminders_file.close()
 
 
-def get_all_reminders(reminders_date: datetime.date) -> []:
+def get_reminders_by_date(date: datetime.date) -> [Reminder]:
     try:
-        reminders_strings = open(f'{constants.Reminders.REMINDERS_FOLDER}/{reminders_date}.txt').readlines()
+        reminders_strings = open(f'{constants.Reminders.REMINDERS_FOLDER}/{date}.txt').readlines()
     except Exception:
         return None
 
@@ -98,7 +112,7 @@ def get_all_reminders(reminders_date: datetime.date) -> []:
     return reminders
 
 
-def set_reminder_status(reminder: Reminder, new_status: str) -> None:
+def set_reminder_status(reminder: Reminder, new_status: Reminder.Status) -> None:
     try:
         reminders_strings = open(f'{constants.Reminders.REMINDERS_FOLDER}/{reminder.reminder_date}.txt').readlines()
     except Exception:
@@ -122,3 +136,20 @@ def set_reminder_status(reminder: Reminder, new_status: str) -> None:
     new_reminder_strings_file = open(f'{constants.Reminders.REMINDERS_FOLDER}/{reminder.reminder_date}.txt', 'w+')
     new_reminder_strings_file.writelines(new_reminder_strings)
     new_reminder_strings_file.close()
+
+
+def get_reminders_by_now() -> [Reminder]:
+    today_reminders = get_reminders_by_date(date=datetime.date.today())
+
+    now_time = str(datetime.datetime.now()).split()[1].split('.')[0][0:-4]
+
+    if today_reminders is None:
+        return []
+
+    now_reminders = []
+
+    for reminder in today_reminders:
+        if str(reminder.reminder_time)[0:-4] == now_time:
+            now_reminders.append(reminder)
+
+    return now_reminders

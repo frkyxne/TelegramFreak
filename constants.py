@@ -1,7 +1,7 @@
 class BotHost:
     BOT_HOST_SUCCESS_NOTIFICATION = f'Bot was successfully hosted and now online.\n{"=" * 52}'
     BOT_HOST_FAILURE_NOTIFICATION = 'Failed to host bot.'
-    BOT_KILLING_NOTIFICATION = f'\n{"=" * 21}\nKilling bot.'
+    BOT_KILLING_NOTIFICATION = f'\n{"=" * 12}\nKilling bot.'
 
 
 class Commands:
