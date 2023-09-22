@@ -69,9 +69,12 @@ class MessagesHandler:
         message_text = message.text.lower()
 
         def get_fast_reply(fast_rely_command: str) -> str:
-            if fast_rely_command in [constants.Commands.START_COMMAND, constants.Commands.HELP_COMMAND]:
-                # Read fast reply from file
-                reply = io.open(f'Fast Replies/{fast_rely_command}.txt', encoding="utf-8").read()
+            if fast_rely_command == constants.Commands.START_COMMAND:
+                reply = constants.FastRepliesContent.START_REPLY
+            elif fast_rely_command == constants.Commands.HELP_COMMAND:
+                reply = constants.FastRepliesContent.HELP_REPLY
+            elif fast_rely_command == constants.Commands.KILL_COMMAND:
+                reply = constants.System.KILL_CODE
             elif fast_rely_command == constants.Commands.MY_BIO_COMMAND:
                 # Parse fast reply from user's data
                 reply = str(message.from_user)
@@ -90,7 +93,6 @@ class MessagesHandler:
                 return remindersmaster.Reminder(user_id=message.from_user.id)
 
         def get_response_to_request(created_request, bot_response: BotResponse = None) -> BotResponse:
-
             if bot_response is None:
                 bot_response = BotResponse(user=message.from_user)
 
@@ -128,8 +130,7 @@ class MessagesHandler:
                     # Try to set time
                     try:
                         hour, minutes = message_text.split(':')
-                        hour = int(hour)
-                        minutes = int(minutes)
+                        hour, minutes = int(hour), int(minutes)
                     except Exception:
                         # Wrong syntax, return error
                         bot_response.add_message(constants.WRONG_SYNTAX_EXCEPTION)
@@ -145,34 +146,37 @@ class MessagesHandler:
                     created_request.reminder_text = message.text.replace('/', '|')
                     self.editing_requests.remove(created_request)
                     remindersmaster.write_down_reminder(created_request)
-                    bot_response.add_message(f'Alright, I will reminder you {created_request.reminder_date} in '
+                    bot_response.add_message(f'Alright, I will reminder you '
+                                             f'{str(created_request.reminder_date).replace("-", ".")} in '
                                              f'{str(created_request.reminder_time)[0:-3]} oclock about '
                                              f'"{created_request.reminder_text}"')
                     return bot_response
+            else:
+                return BotResponse(user=message.from_user, text=f'Request type "{created_request}" is not supported')
 
         def get_response_to_command() -> BotResponse:
+            # User command is fast reply, return fast reply.
             if message_text in constants.Commands.FAST_REPLY_COMMANDS:
-                # User command is fast reply
                 return BotResponse(user=message.from_user, text=get_fast_reply(message_text))
+            # User is trying to abort not existing request, return error.
             elif message_text == constants.Commands.ABORT_COMMAND:
-                # User is trying to abort not existing request
                 return BotResponse(user=message.from_user, text=constants.Commands.NO_EDITING_REQUEST_EXCEPTION)
+            # User command is request, creating one.
             elif message_text in constants.Commands.REQUEST_COMMANDS:
-                # User command is request
                 new_request = create_request(message_text)
                 self.editing_requests.append(new_request)
                 response = BotResponse(user=message.from_user, text=constants.Commands.CREATING_REQUEST)
                 return get_response_to_request(bot_response=response, created_request=new_request)
+            # Command is not supported, return error.
             else:
-                # Command is not supported, return error
                 return BotResponse(user=message.from_user, text=f'Command "{message.text}" is not supported')
 
         # Does user have already created request?
-        already_created_request = None
-
-        for request in self.editing_requests:
-            if request.user_id == message.from_user.id:
-                already_created_request = request
+        if len(self.editing_requests) > 0:
+            already_created_request = next(request for request in self.editing_requests
+                                           if request.user_id == message.from_user.id)
+        else:
+            already_created_request = None
 
         if already_created_request is None:
             return get_response_to_command()
@@ -182,4 +186,3 @@ class MessagesHandler:
             return BotResponse(user=message.from_user, text=constants.Commands.DELETING_EDITING_REQUEST)
         else:
             return get_response_to_request(created_request=already_created_request)
-

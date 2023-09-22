@@ -31,7 +31,11 @@ class BotHoster:
         self.bot.send_message(chat_id=message.user_id, text=message.text, reply_markup=message.reply_keyboard)
 
     def get_unread_messages(self) -> [telebot.types.Message]:
-        updates = self.bot.get_updates(offset=self.__update_offset, timeout=1, allowed_updates=['message'])
+        try:
+            updates = self.bot.get_updates(offset=self.__update_offset, timeout=1, allowed_updates=['message'])
+        except Exception:
+            return
+
         unread_messages = []
 
         for update in updates:

@@ -14,13 +14,17 @@ class Commands:
     HELP_COMMAND = '/help'
     MY_BIO_COMMAND = '/my_bio'
     MUSIC_COMMAND = '/music'
+    SAY_COMMAND = '/say'
+    KILL_COMMAND = '/shi'
 
     FAST_REPLY_COMMANDS = \
         [
             START_COMMAND,
             HELP_COMMAND,
             MY_BIO_COMMAND,
-            MUSIC_COMMAND
+            MUSIC_COMMAND,
+            SAY_COMMAND,
+            KILL_COMMAND
         ]
 
     # System commands
@@ -32,6 +36,24 @@ class Commands:
     REQUEST_COMMANDS = \
         [
             REMIND_COMMAND,
+        ]
+
+
+class FastRepliesContent:
+    START_REPLY = 'Hello, this bot was created in education purposes. Have fun! idk how tho.'
+    HELP_REPLY = ('/start - useless text\n/help  - list of supported commands.\n'
+                  '/my_bio - information about you, dear user :)\n/remind - create a reminder.'
+                  '\n/music  - lo fi hip hop radio.\n/abort - abort creation of request.')
+
+
+class System:
+    SAY_CODE = 'sys_say'
+    KILL_CODE = 'sys_shi'
+
+    SYSTEM_COMMANDS = \
+        [
+            SAY_CODE,
+            KILL_CODE
         ]
 
 
@@ -51,7 +73,7 @@ class RemindRequest:
 
 
 class Reminders:
-    REMINDERS_FOLDER = 'F:/Code/GitHubRepositories/TelegramFreak/Reminders'
+    REMINDERS_FOLDER = 'Reminders'
     WAITING_TIME_STATUS = 'Waiting time'
     NOTIFIED_STATUS = 'Notified'
 
@@ -59,6 +81,6 @@ class Reminders:
 
 
 WRONG_SYNTAX_EXCEPTION = 'Wrong syntax.'
-TOKEN_PATH = 'F:/Code/GitHubRepositories/TelegramFreak/Fast Replies/bot_token.txt'
-KILL_CODE_PATH = 'F:/Code/GitHubRepositories/TelegramFreak/Fast Replies/kill_code.txt'
-LOGS_FOLDER = 'F:/Code/GitHubRepositories/TelegramFreak/Logs'
+TOKEN_PATH = 'Fast Replies/bot_token.txt'
+KILL_CODE_PATH = 'Fast Replies/kill_code.txt'
+LOGS_FOLDER = 'Logs'
