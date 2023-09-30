@@ -1,4 +1,0 @@
-Fast Replies/bot_token.txt
-Fast Replies/kill_code.txt
-Logs/
-Reminders/

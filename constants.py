@@ -81,6 +81,5 @@ class Reminders:
 
 
 WRONG_SYNTAX_EXCEPTION = 'Wrong syntax.'
-TOKEN_PATH = 'Fast Replies/bot_token.txt'
-KILL_CODE_PATH = 'Fast Replies/kill_code.txt'
+TOKEN_PATH = 'bot_token.txt'
 LOGS_FOLDER = 'Logs'
