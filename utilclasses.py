@@ -21,19 +21,19 @@ class UserRequest:
 
 
 class BotMessageData:
-    def __init__(self, reply_text: str, chat_id: str = None, replying_message: teletypes.Message = None,
+    def __init__(self, message_text: str, chat_id: str = None, replying_message: teletypes.Message = None,
                  reply_markup: [str] = None):
-        self.__reply_text = reply_text
+        self.__message_text = message_text
         self.__user_message = replying_message
         self.__reply_markup = reply_markup
         self.__chat_id = chat_id
 
     @property
-    def reply_text(self):
-        return self.__reply_text
+    def message_text(self):
+        return self.__message_text
 
     @property
-    def reply_message(self):
+    def replying_message(self):
         return self.__user_message
 
     @property
