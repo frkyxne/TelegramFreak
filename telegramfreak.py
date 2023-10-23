@@ -26,7 +26,27 @@ class TelegramFreak:
         """
         self.__supported_commands = value
 
-    def send_to_group(self, BotMessageData):
+    def send_message(self, message_data: BotMessageData):
+        """
+        Sends message to specific chat.
+
+        :param message_data: Data of message to send. Must have chat_id, otherwise exception will be raised.
+        """
+        if message_data.chat_id is None:
+            raise Exception(f'{constants.CONSOLE_PREFIX} send_message() was called with empty chat_id.')
+
+        self.__bot.send_message(text=message_data.reply_text, chat_id=message_data.chat_id)
+
+    def send_to_groups(self, message_data: BotMessageData):
+        """
+        Sends message to all groups in config.
+
+        :param message_data: Data of message to send. Must have chat_id, otherwise exception will be raised.
+        """
+        for group_id in config.BOT_GROUP_IDS:
+            group_message_data = BotMessageData(reply_text=message_data.reply_text, chat_id=group_id,
+                                                reply_markup=message_data.reply_variants)
+            self.send_message(message_data=group_message_data)
 
     def reply_to_message(self, reply_data: BotMessageData):
         """
@@ -43,7 +63,7 @@ class TelegramFreak:
         else:
             self.__bot.reply_to(message=reply_data.reply_message, text=reply_data.reply_text)
 
-    def get_unserviced_commands(self) -> [UserRequest]:
+    def get_unserviced_requests(self) -> [UserRequest]:
         """
         Gets and prints telegram user's unserviced commands.
 
@@ -65,20 +85,25 @@ class TelegramFreak:
 
         for user_request in user_requests:
             user_id = user_request.message.from_user.id
+            refusal_reply_text = None
 
             if config.BOT_MOD == constants.BOT_MOD_PRIVATE and user_id not in config.WHITE_LIST_IDS:
-                self.reply_to_message(BotMessageData(reply_text='This bot is private. You are not in whitelist.',
-                                                     replying_message=user_request.message))
+                refusal_reply_text = 'This bot is private. You are not in whitelist.'
             elif user_request.command is None and user_request.message.chat.type == 'private':
-                self.reply_to_message(BotMessageData(reply_text=f'Command was not recognized.',
-                                                     replying_message=user_request.message))
+                refusal_reply_text = 'Command was not recognized.'
             elif user_request.command not in self.__supported_commands:
-                self.reply_to_message(BotMessageData(reply_text=f'Command "{user_request.command}" is not supported',
-                                                     replying_message=user_request.message))
-            else:
-                supported_user_requests.append(user_request)
+                refusal_reply_text = f'Command "{user_request.command}" is not supported'
 
-        return user_requests
+            if refusal_reply_text is None:
+                supported_user_requests.append(user_request)
+            else:
+                refusal_reply_data = BotMessageData(reply_text=refusal_reply_text,
+                                                    replying_message=user_request.message,
+                                                    reply_markup=self.supported_commands)
+
+                self.reply_to_message(refusal_reply_data)
+
+        return supported_user_requests
 
     def __get_unread_messages(self) -> [telebot.types.Message]:
         """
@@ -113,7 +138,8 @@ class TelegramFreak:
             return UserRequest(message=user_message)
 
         command = None if user_message.text[0] != '/' else user_message.text.split()[0]
-        command_args = None if command is None else user_message.text.replace(f'{command} ', '').split()
+
+        command_args = None if command is None else user_message.text.replace(command, '').split()
         return UserRequest(message=user_message, command=command, command_args=command_args)
 
     @staticmethod
@@ -138,13 +164,16 @@ class TelegramFreak:
         print(f'{constants.CONSOLE_PREFIX} {sender_data}: "{message_text}" -> {receiver_data}')
 
     @staticmethod
-    def __get_keyboard_from_commands(commands: [str]) -> telebot.types.ReplyKeyboardMarkup:
+    def __get_keyboard_from_commands(commands: [str]):
         """
         Parses commands array into ReplyKeyBoardMarkup.
 
         :param commands: Commands to parse.
-        :returns: Parsed ReplyKeyBoardMarkup
+        :returns: Parsed ReplyKeyBoardMarkup or None.
         """
+
+        if commands is None or len(commands) == 0:
+            return None
 
         keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
         row_count = len(commands) // constants.REPLY_KEYBOARD_BUTTONS_IN_ROW
@@ -155,7 +184,7 @@ class TelegramFreak:
         for row_index in range(row_count):
             row_buttons = []
 
-            for column_index in range(constants.REPLY_KEYBOARD_BUTTONS_IN_ROW):
+            for column_index in range(constants.REPLY_KEYBOARD_BUTTONS_IN_ROW - 1):
                 command_index = row_index * constants.REPLY_KEYBOARD_BUTTONS_IN_ROW + column_index
                 row_buttons.append(telebot.types.KeyboardButton(commands[command_index]))
 
@@ -168,5 +197,12 @@ if __name__ == '__main__':
     bot = TelegramFreak()
     bot.menu_commands = ['/seks']
     bot.supported_commands = ['/seks', 'qwe']
+
     while True:
-        bot.get_unserviced_commands()
+        unserviced_requests = bot.get_unserviced_requests()
+
+        for unserviced_request in unserviced_requests:
+            reply_text = f'command: {unserviced_request.command}\nargs: {unserviced_request.commands_args}'
+            request_reply_data = BotMessageData(reply_text=reply_text, replying_message=unserviced_request.message,
+                                                reply_markup=bot.supported_commands)
+            bot.reply_to_message(reply_data=request_reply_data)
