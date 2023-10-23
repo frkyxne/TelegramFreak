@@ -1,4 +1,5 @@
 CONSOLE_PREFIX = 'TelegramFreak:'
+CONSOLE_MESSAGE_MAX_LENGTH = 40
 
 BOT_MOD_PRIVATE = 'Private'
 BOT_MOD_PUBLIC = 'Public'
