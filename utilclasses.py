@@ -20,26 +20,34 @@ class UserRequest:
         return self.__message
 
 
-class BotMessageData:
-    def __init__(self, message_text: str, chat_id: str = None, replying_message: teletypes.Message = None,
-                 reply_markup: [str] = None):
+class BotReply:
+    def __init__(self, reply_text: str, replying_message: teletypes.Message, reply_variants: [str]):
+        self.__reply_text = reply_text
+        self.__replying_message = replying_message
+        self.__reply_variants = reply_variants
+
+    @property
+    def reply_text(self):
+        return self.__reply_text
+
+    @property
+    def replying_message(self):
+        return self.__replying_message
+
+    @property
+    def reply_variants(self):
+        return self.__reply_variants
+
+
+class BotMessage:
+    def __init__(self, message_text: str, target_chat: teletypes.Chat):
         self.__message_text = message_text
-        self.__user_message = replying_message
-        self.__reply_markup = reply_markup
-        self.__chat_id = chat_id
+        self.__message_chat = target_chat
 
     @property
     def message_text(self):
         return self.__message_text
 
     @property
-    def replying_message(self):
-        return self.__user_message
-
-    @property
-    def reply_variants(self):
-        return self.__reply_markup
-
-    @property
-    def chat_id(self):
-        return self.__chat_id
+    def message_chat(self):
+        return self.__message_chat
