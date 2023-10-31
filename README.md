@@ -1,5 +1,5 @@
 # TelegramFreak
-### Simple, not reliable telegram bot api.
+Simple, not reliable telegram bot api.
 
 ## Introduction
 This project created for learning&practicing python and personal use.
@@ -15,7 +15,9 @@ This api:
 
 ## Setup
 First of all, you need to setup telebot package:
+'''
 $ pip install telebot
+'''
 
 In the repository folder create config.py and fill it according to the model of configexample.py.
 Usage of api located in telegramfreak.py
